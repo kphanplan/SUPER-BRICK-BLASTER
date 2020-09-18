@@ -9,5 +9,22 @@ canvas {
 }
 
 body {
-  background-color: gray;
+  background-image: url(neonbg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#myCanvas {
+  opacity: 0.9;
+  border-radius: 15px;
+}
+
+.text-box {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.925);
+    margin-top: 50px;
+}
+
+#titleCard {
+    color: white;
 }

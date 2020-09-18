@@ -1,48 +1,130 @@
 //Game settings
+var playing = false;
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
-var mainColor = "#0095DD";
+var mainColor = "#32CD32";
 var score = 0;
+var level = 1;
 var lives = 3;
+alert("HIT OK TO START GAME");
+//GAME PROPERTIES
+function game() {
+  //this clears and creates "fps"
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bgm();
+  generateLevel();
+  //creates ball collision at frame ends (right, left)
+  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+    dx = -dx;
+  }
+  //ends the game if ball hits bottom Y wall
+  if (y + dy < ballRadius) {
+    dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    //paddle collision
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
+      paddleBonkSound();
+    } else {
+      //prompts game over
+      lives--;
+      if (!lives) {
+        alert("GAME OVER");
+        document.location.reload();
+        clearInterval(interval);
+      } else {
+        x = canvas.width / 2;
+        y = canvas.height - 30;
+        paddleX = (canvas.width - paddleWidth) / 2;
+      }
+    }
+  }
+  //updates paddle's position and adds wall collision
+  if (rightPressed) {
+    paddleX += 7;
+    if (paddleX + paddleWidth > canvas.width) {
+      paddleX = canvas.width - paddleWidth;
+    }
+  } else if (leftPressed) {
+    paddleX -= 7;
+    if (paddleX < 0) {
+      paddleX = 0;
+    }
+  }
+  //updates the ball's position
+  x += dx;
+  y += dy;
+}
 
+function generateLevel() {
+  drawScore();
+  drawLives();
+  drawLevel();
+  drawBall();
+  drawPaddle();
+  collisionDetection();
+  drawBricks();
+}
+
+//generates the ball every 10ms
+var interval = setInterval(game, 10);
+
+//AUDIO
 function bonkSound() {
-    var sound = document.getElementById("bonk");
-    sound.play();
+  var sound = document.getElementById("bonk");
+  sound.volume = 0.8;
+  const newSound = sound.cloneNode();
+  newSound.play();
+}
+
+function paddleBonkSound() {
+  var sound = document.getElementById("paddleBonk");
+  sound.volume = 0.3;
+  sound.play();
+}
+
+function pewSound() {
+  var sound = document.getElementById("pew");
+  sound.volume = 0.5;
+  sound.play();
 }
 
 function bgm() {
-    var sound = document.getElementById("bgm");
-    sound.volume = 0.2;
-    sound.play();
+  var sound = document.getElementById("bgm");
+  sound.volume = 0.2;
+  sound.play();
 }
 
 function victorySound() {
-    var sound = document.getElementById("victory");
-    sound.play();
+  var sound = document.getElementById("victory");
+  sound.play();
 }
 
+//PLAYER STATS
 function drawScore() {
   ctx.font = "16px Arial";
   ctx.fillStyle = "#0095DD";
-  ctx.fillText("Score: " + score, 8, 20);
+  ctx.fillText("SCORE: " + score, 8, 20);
+}
+
+function drawLevel() {
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("LEVEL: " + level, canvas.width - canvas.width / 2 - 35, 20);
 }
 
 function drawLives() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "#0095DD";
-    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#0095DD";
+  ctx.fillText("LIVES: " + lives, canvas.width - 75, 20);
 }
 
 //Player controls
-//mouse controls
-document.addEventListener("mousemove", mouseMoveHandler, false);
+document.addEventListener("click", function () {
+  pewSound();
+  score = winThreshold - 1;
+});
 
-function mouseMoveHandler(e) {
-    var relativeX = e.clientX - canvas.offsetLeft;
-    if(relativeX > 0 && relativeX < canvas.width) {
-        paddleX = relativeX - paddleWidth/2;
-    }
-}
 //keyboard controls
 var rightPressed = false;
 var leftPressed = false;
@@ -105,13 +187,23 @@ var brickWidth = 120;
 var brickHeight = 40;
 var brickPadding = 10;
 var brickOffsetTop = 30;
-var brickOffsetLeft = 30;
-//generates Z number of bricks with status of 1
+var brickOffsetLeft = 40;
+
+//generates Z number of bricks with status of 1\
 var bricks = [];
 for (var c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
   for (var r = 0; r < brickRowCount; r++) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
+  }
+}
+
+function brickReset() {
+  for (var c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (var r = 0; r < brickRowCount; r++) {
+      bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
   }
 }
 
@@ -134,7 +226,8 @@ function drawBricks() {
   }
 }
 
-//create brick hitboxes
+var winThreshold = brickRowCount * brickColumnCount;
+// create brick hitboxes
 function collisionDetection() {
   for (var c = 0; c < brickColumnCount; c++) {
     for (var r = 0; r < brickRowCount; r++) {
@@ -150,74 +243,30 @@ function collisionDetection() {
           b.status = 0;
           score++;
           bonkSound();
+          console.log(bricks);
+          console.log(b);
           //ends the game when you have no bricks left
-          if (score == brickRowCount * brickColumnCount) {
+          if (score == winThreshold) {
             victorySound();
-            alert("YOU WIN, CONGRATULATIONS!");
-            document.location.reload();
-            clearInterval(interval); // Needed for Chrome to end game
+            alert("LEVEL COMPLETE NEXT LEVEL?");
+            if (level < 3) {
+              brickRowCount++;
+            }
+            if (level < 5) {
+              dx += 0.3;
+              dy += 0.3;
+            }
+            if (level >= 3 && level < 5) {
+              brickWidth -= 17.5;
+              brickPadding -= 1;
+              brickColumnCount++;
+            }
+            level++;
+            brickReset();
+            winThreshold += brickRowCount * brickColumnCount;
           }
         }
       }
     }
   }
 }
-
-//GAME PROPERTIES
-function game() {
-  //this clears and creates "fps"
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  bgm();
-  drawScore();
-  drawLives();
-  drawBall();
-  drawPaddle();
-  drawBricks();
-  collisionDetection();
-  //creates ball collision at frame ends (right, left)
-  if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-    dx = -dx;
-  }
-  //ends the game if ball hits bottom Y wall
-  if (y + dy < ballRadius) {
-    dy = -dy;
-  } else if (y + dy > canvas.height - ballRadius) {
-    //paddle collision
-    if (x > paddleX && x < paddleX + paddleWidth) {
-      dy = -dy;
-    } else {
-        //prompts game over
-        lives--;
-        if(!lives) {
-            alert("GAME OVER");
-            document.location.reload();
-            clearInterval(interval);
-        }
-        else {
-            x = canvas.width/2;
-            y = canvas.height-30;
-            dx = 2;
-            dy = -2;
-            paddleX = (canvas.width-paddleWidth)/2;
-        }
-    }
-  }
-
-  //updates paddle's position and adds wall collision
-  if (rightPressed) {
-    paddleX += 7;
-    if (paddleX + paddleWidth > canvas.width) {
-      paddleX = canvas.width - paddleWidth;
-    }
-  } else if (leftPressed) {
-    paddleX -= 7;
-    if (paddleX < 0) {
-      paddleX = 0;
-    }
-  }
-  //updates the ball's position
-  x += dx;
-  y += dy;
-}
-//generates the ball every 10ms
-var interval = setInterval(game, 10);
