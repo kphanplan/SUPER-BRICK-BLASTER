@@ -8,10 +8,32 @@ canvas {
   margin: 0 auto;
 }
 
-body {
-  background-image: url(neonbg.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+h1 {
+  color: cyan;
+}
+
+#bg {
+  position: fixed; 
+  top: -50%; 
+  left: -50%; 
+  width: 200%; 
+  height: 200%;
+}
+#bg img {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  margin: auto; 
+  min-width: 50%;
+  min-height: 50%;
 }
 
 #myCanvas {
@@ -20,11 +42,17 @@ body {
 }
 
 .text-box {
-    color: white;
-    background-color: rgba(0, 0, 0, 0.925);
-    margin-top: 50px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.925);
+  margin-top: 30px;
+}
+#muteicon:hover {
+  color: purple;
 }
 
 #titleCard {
-    color: white;
+  margin-top: 10px;
+  position:relative;
+  z-index: 50;
+  color: white;
 }

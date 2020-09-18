@@ -3,23 +3,30 @@
     <meta charset="utf-8" />
     <title>Brick Blaster!</title>
     <!-- AUDIO -->
-    <audio id="bonk" src="https://www.soundjay.com/button/sounds/button-3.mp3"
+    <audio
+      id="bonk"
+      src="https://www.soundjay.com/button/sounds/button-3.mp3"
       autostart="false"
     ></audio>
     <audio
-    id="paddleBonk"
-    src="https://www.soundjay.com/button/sounds/button-10.mp3"
-    autostart="false"
+      id="paddleBonk"
+      src="https://www.soundjay.com/button/sounds/button-10.mp3"
+      autostart="false"
     ></audio>
     <audio
-    id="pew"
-    src="https://www.soundjay.com/button/sounds/button-4.mp3"
-    autostart="false"
+      id="pew"
+      src="https://www.soundjay.com/button/sounds/button-4.mp3"
+      autostart="false"
     ></audio>
     <audio
-    id="victory"
-    src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-55112/zapsplat_multimedia_game_sound_digital_high_pitched_positive_success_complete_tone_55832.mp3"
-    autostart="false"
+      id="victory"
+      src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-55112/zapsplat_multimedia_game_sound_digital_high_pitched_positive_success_complete_tone_55832.mp3"
+      autostart="false"
+    ></audio>
+    <audio
+      id="lifeLost"
+      src="https://www.soundjay.com/button/sounds/button-12.mp3"
+      autostart="false"
     ></audio>
     <audio
       id="bgm"
@@ -32,29 +39,52 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="container justify-content-center text-center">
-      <h1 id = "titleCard" >SUPER BRICK BLASTER 2.0.1 <br />ULTRA 二番目 !!!</h1>
+    <div id="bg">
+      <img src="neonbg.jpg" alt="" />
     </div>
+
+    <div class="container text-center">
+      <h1 id="titleCard">SUPER BRICK BLASTER 2.0.1 <br />ULTRA 二番目 !!!</h1>
+    </div>
+
     <div class="container" id="game">
       <canvas id="myCanvas" width="720" height="480"></canvas>
     </div>
 
     <div class="container justify-content-center text-center">
-        <div class = "row">
-            <div class = "col-md-2">
-            </div>
-            <div class = "col-md-8 text-box">
-        <h1>HOW TO PLAY:</h1>
-        <h2>PLAYERS CAN CONTROL THE PADDLE USING THE - -> ARROW KEYS OR THE MOUSE.</h2>
-        <h3>THE OBJECTIVE: DEFLECT THE BALL USING THE PADDLE TO DESTROY THE BRICKS. SCORE AS HIGH AS YOU CAN!</h2>
-            </div>
-            <div class = "col-md-2">
-            </div>
+      <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-5 text-box">
+          <h1>CONTROLS:</h1>
+          <span id="muteicon"
+            ><h6><span id="mute">🔊</span>MUTE MUSIC</h6></span
+          >
+          <span
+            ><h6>
+              <h2>← →</h2>
+              MOVE
+            </h6></span
+          >
+          <span
+            ><h6>
+              <h2>[ SPACE ]</h2>
+              SHOOT
+            </h6></span
+          >
         </div>
- 
+        <div class="col-md-5 text-box">
+          <h1>HIGH SCORES:</h1>
+          <h5>(Feature not yet implemented)</h5>
+        </div>
+        <div class="col-md-1"></div>
       </div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
