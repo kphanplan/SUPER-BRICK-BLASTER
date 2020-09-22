@@ -113,7 +113,7 @@ function lifeLost() {
 
 function bgm() {
   var sound = document.getElementById("bgm");
-  sound.volume = 0.2;
+  sound.volume = 0.3;
   sound.play();
 }
 
@@ -121,12 +121,6 @@ function victorySound() {
   var sound = document.getElementById("victory");
   sound.play();
 }
-
-var vid = document.getElementById("muteicon");
-vid.addEventListener("click", function() {
-  bgm.muted = true|false;
-})
-
 
 //UI STATS
 function drawScore() {
